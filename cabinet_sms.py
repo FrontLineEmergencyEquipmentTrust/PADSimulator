@@ -108,7 +108,7 @@ def sms(msgText, colour):
 	smsText = ''
 
 	try:
-		smsdongle = serial.Serial('/dev/sms_dongle', 115200, timeout=1)
+		smsdongle = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)
 		smsText = msgText+' '+LOCATION
 		smsdongle.write("AT^CURC=0\r") # disable periodic status reports
 		response = smsdongle.readline()
@@ -162,7 +162,7 @@ def sms(msgText, colour):
 
 		smsText = "SMS Sent - "+smsText
 	except:
-		print("There was an error opening the sms_dongle serial port")
+		print("There was an error opening the ttyUSB0 serial port")
 		if smsText.split():
 			smsText = "ERROR SENDING SMS"
 

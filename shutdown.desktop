@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Shutdown
+Comment=Shutdown the machine
+Exec=sudo /home/pi/shutdown.sh
+Icon=/directoryandfilenamehere
+Terminal=false
+Type=Application
+Categories=Utility;Application;

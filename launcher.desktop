@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=Application launcher
+Version=1.0
+Comment=Launches application
+Exec=sudo /home/pi/cabinet_sms.py
+#Icon=/path/to/icon.png
+Terminal=false
+Type=Application
+Categories=Education
+
+Path=/home/pi
+Comment[en_GB]=Fleet Cabinet with SMS
+Name[en_GB]=Fleet Cabinet with SMS

@@ -1,5 +1,9 @@
 # PADSimulator
 
+## Hardware
+
+Due to the USB power supply requirements of the E220 dongle, you need to use a B+ or V2 Pi.
+
 ## File locations
 
 /home/pi/cabinet_sms.py

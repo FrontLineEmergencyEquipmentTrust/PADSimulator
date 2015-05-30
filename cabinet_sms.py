@@ -16,7 +16,7 @@ import os
 CABINETTIMEOUT = 300
 #
 # set up location
-LOCATION = '#AAD-702 Demo Unit, Royal Cornwall Show'  # note use of single quotes
+LOCATION = '#AAD-702 Demo Unit, Fleet Ambulance'  # note use of single quotes
 #
 # set up phone number to SMS
 SMSNUMBER='07xxxxxxxxx'   # note use of single quotes

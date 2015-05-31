@@ -1,11 +1,26 @@
 #!/bin/bash
+echo
+echo PADSimulator Installation
 cp cabinet_sms.py /home/pi/cabinet_sms.py
 cp shutdown.sh /home/pi/shutdown.sh
 cp launcher.desktop /home/pi/Desktop/launcher.desktop
 cp shutdown.desktop /home/pi/Desktop/shutdown.desktop
+echo Files copied across
+echo
+echo Installing picocom
+sudo apt-get -y --force-yes install picocom
+echo
 
 echo Please enter mobile number to SMS 
 read mobileNumber
+echo
 sed -i -- 's/07xxxxxxxxx/'$mobileNumber'/' /home/pi/cabinet_sms.py
 
-echo Install complete
+echo Please connect E220 USB Dongle to configure it
+echo Press enter when dongle has booted up \(usually takes about 1 minute\)
+read enterpressed
+
+sudo ./configuredongle.py
+
+echo
+echo Installation complete

@@ -30,8 +30,21 @@ Expand Filesystem
 
 Enable SSH
 
+### Things to do in LXDE desktop
 
-### Linux setup
+Disable Screen Sleep
+
+### Auto Installation
+
+Clone the Github repository
+
+`cd PADSimulator`
+
+`sudo ./install`
+
+Auto install now updates autostart, copied files to correct directories, configures the SMS phone number, configures the E220 dongle and installs picocom for debugging.
+
+### Manual Installation
 
 ```sudo apt-get install picocom```
 

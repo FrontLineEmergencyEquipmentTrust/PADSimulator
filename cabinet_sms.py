@@ -23,15 +23,11 @@ SMSNUMBER='07xxxxxxxxx'   # note use of single quotes
 #
 #*************************************************************************************
 
-# set SMS on or off
-SMS = True
-#SMS = False
-
 # set debug on or off
 #debug = True
 debug = False
 
-# set up the colors
+# set up the colours
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
@@ -39,9 +35,11 @@ GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 
 # set global variables
+SMS = True
 cabinetUnlocked = False
 doorOpen = False
 defibRemoved = False
+bouncetimedoorlock = time.time()
 bouncetimedoorclosed = time.time()
 bouncetimedooropen = time.time()
 bouncetimedefibremoved = time.time()
@@ -53,6 +51,7 @@ def reset():
 	global doorOpen
 	global cabinetTimer
 	global defibRemoved
+	global SMS
 
 	cabinetUnlocked = False
 	state = ''
@@ -65,7 +64,18 @@ def reset():
 		defibRemoved = True
 		state += 'Defibrillator Missing'
 	else:
-		defibRemoved = False		
+		defibRemoved = False	
+
+	if(dongleIsPresent()):
+		SMS = True
+		if debug:
+			print 'Dongle Present'	
+	else:
+		SMS = False
+		state += ' SMS Dongle Missing '
+		if debug:
+			print 'Dongle Missing'
+		
 	cabinetTimer = time.time()
 	GPIO.output(LIGHTPIN, False)
 	pygame.mouse.set_pos(0,0)
@@ -74,10 +84,10 @@ def reset():
 	if state.strip():
 		smallMessage(state, RED)
 
-def message(msgText, colour):
-	windowSurface.fill(colour)
+def message(msgText, backgroundColour):
+	windowSurface.fill(backgroundColour)
 	basicFont = pygame.font.SysFont(None, 180)
-	text = basicFont.render(msgText, True, WHITE, colour)
+	text = basicFont.render(msgText, True, WHITE, backgroundColour)
 	textRect = text.get_rect()
 	textRect.centerx = windowSurface.get_rect().centerx
 	textRect.centery = windowSurface.get_rect().centery
@@ -87,9 +97,9 @@ def message(msgText, colour):
 		print(msgText)
 
 
-def smallMessage(smallText, colour):
+def smallMessage(smallText, backgroundColour):
 	basicFont = pygame.font.SysFont(None, 30)
-	text = basicFont.render(smallText, True, WHITE, colour)
+	text = basicFont.render(smallText, True, WHITE, backgroundColour)
 	textRect = text.get_rect()
 	textRect.centerx = windowSurface.get_rect().centerx
 	textRect.centery = windowSurface.get_rect().centery+100
@@ -98,8 +108,23 @@ def smallMessage(smallText, colour):
 	if debug:
 		print(smallText)
 
+def dongleIsPresent():
+	try:
+		smsdongle = serial.Serial('/dev/ttyUSB0', 115200, timeout=1)
+		smsdongle.write("AT\r") # expect OK in response
+		response = smsdongle.readline() # reads the echo
+		if debug:
+			print(response)
+		response = smsdongle.readline() # reads the response
+		if debug:
+			print(response)
+		if ("OK" in response): 
+			return True
+	except:
+		return False
 
-def sms(msgText, colour):
+
+def sms(msgText, backgroundColour):
 	global LOCATION
 
 	if(not SMS):
@@ -166,14 +191,15 @@ def sms(msgText, colour):
 		if smsText.split():
 			smsText = "ERROR SENDING SMS"
 
-	smallMessage(smsText, colour)
+	if smsText.split():
+		smallMessage(smsText, RED)
 
 
 def shutdownEventHandler(gpioPin):
 	time.sleep(2) # debounce needed for next test
 	
 	if GPIO.input(gpioPin):
-		return 1#
+		return 1
 
 	message("Shutting Down", BLUE)
 	os.system("sudo halt")
@@ -181,14 +207,26 @@ def shutdownEventHandler(gpioPin):
 def lockEventHandler(gpioPin):
 	global cabinetUnlocked
 	global cabinetTimer
-	if (not cabinetUnlocked):
-		cabinetUnlocked = True
-		cabinetTimer = time.time()
-		GPIO.output(LIGHTPIN, True)
-		message('Cabinet Unlocked', BLACK)
-		sms('CABINET UNLOCKED', BLACK)
-	else:
-		reset()
+	global bouncetimedoorlock
+
+	time_now = time.time()
+
+	if (time_now - bouncetimedoorlock) >= 0.5:
+		bouncetimedooropen = time_now
+
+		time.sleep(0.3) # debounce needed for next test
+	
+		if GPIO.input(gpioPin):
+			return 1
+
+		if (not cabinetUnlocked):
+			cabinetUnlocked = True
+			cabinetTimer = time.time()
+			GPIO.output(LIGHTPIN, True)
+			message('Cabinet Unlocked', BLACK)
+			sms('CABINET UNLOCKED', BLACK)
+		else:
+			reset()
 
 
 def doorOpenEventHandler(gpioPin):

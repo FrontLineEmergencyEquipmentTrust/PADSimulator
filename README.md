@@ -1,8 +1,16 @@
 # PADSimulator
 
+## Introduction
+
+Written for the Fleet Ambulance public access defibrillator demonstation cabinet, the Fleet PADSimulator uses a Raspberry Pi with a 2G/3G USB dongle to send an SMS when the cabinet door is unlocked, when the cabinet door is opened and when the defibrillator is removed.  The current status is also shown on a display connected to the HDMI output.
+
 ## Hardware
 
 Due to the USB power supply requirements of the E220 dongle, you need to use a B+ or V2 Pi.
+
+##  OS
+
+The software was written on top of the Raspbian Debian Wheezy OS.
 
 ## File locations
 
@@ -17,6 +25,8 @@ Due to the USB power supply requirements of the E220 dongle, you need to use a B
 ## Setup
 
 ### Initial setup
+
+Expand Filesystem
 
 Enable SSH
 
@@ -97,7 +107,7 @@ GPIO BCM 21 Physical Pin 40 = Defib Replaced  input (goes low)
 
 GPIO BCM 16 Physical Pin 36 = Shutdown        input (goes low)
 
-GPIO BCM 24 Physical Pin 18 = Lights On       output (goes low)
+GPIO BCM 24 Physical Pin 18 = Lights On       output (goes high)
 
 ## SMS USB Dongle
 

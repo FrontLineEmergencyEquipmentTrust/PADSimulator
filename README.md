@@ -30,6 +30,7 @@ Expand Filesystem
 
 Enable SSH
 
+
 ### Linux setup
 
 ```sudo apt-get install picocom```
@@ -49,10 +50,6 @@ Change User Settings at the beginning of the program - especially the mobile num
 Add ```@sudo python /home/pi/cabinet_sms.py``` to end of the autostart file
 
 ```Ctrl+x``` followed by ```y``` and ```enter``` to exit and save
-
-### Things to do in LXDE desktop
-
-Disable Screen Sleep
 
 ## Operation
 

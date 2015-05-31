@@ -1,0 +1,11 @@
+#!/bin/bash
+cp cabinet_sms.py /home/pi/cabinet_sms.py
+cp shutdown.sh /home/pi/shutdown.sh
+cp launcher.desktop /home/pi/Desktop/launcher.desktop
+cp shutdown.desktop /home/pi/Desktop/shutdown.desktop
+
+echo Please enter mobile number to SMS 
+read mobileNumber
+sed -i -- 's/07xxxxxxxxx/'$mobileNumber'/' /home/pi/cabinet_sms.py
+
+echo Install complete

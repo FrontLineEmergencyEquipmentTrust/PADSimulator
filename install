@@ -1,6 +1,23 @@
 #!/bin/bash
 echo
 echo PADSimulator Installation
+echo
+echo Updating autostart
+LINE="@sudo python /home/pi/cabinet_sms.py"
+FILE=/etc/xdg/lxsession/LXDE-pi/autostart
+grep -q "$LINE" "$FILE" || echo "$LINE" >> "$FILE"
+
+if [ $? != 0 ]
+then
+	echo
+	echo Install failed.  Type:
+	echo sudo ./install
+	echo
+	exit 1
+fi
+
+echo Autostart updated
+echo
 cp cabinet_sms.py /home/pi/cabinet_sms.py
 cp shutdown.sh /home/pi/shutdown.sh
 cp launcher.desktop /home/pi/Desktop/launcher.desktop
@@ -11,7 +28,7 @@ echo Installing picocom
 sudo apt-get -y --force-yes install picocom
 echo
 
-echo Please enter mobile number to SMS 
+echo Please enter mobile number to SMS
 read mobileNumber
 echo
 sed -i -- 's/07xxxxxxxxx/'$mobileNumber'/' /home/pi/cabinet_sms.py
@@ -20,7 +37,7 @@ echo Please connect E220 USB Dongle to configure it
 echo Press enter when dongle has booted up \(usually takes about 1 minute\)
 read enterpressed
 
-sudo ./configuredongle.py
-
+./configuredongle.py
 echo
+
 echo Installation complete
